@@ -11,22 +11,21 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-
-    const id = req.params.id;
-    res.send(`return the snipplet with the id: ${id}`);
-
+    cat.getCategory(req.params.id)
+    .then(x=>res.send(x))
+    .catch(x=> res.status(500).send(x));
 });
 
 router.post('/', (req, res) => {
-
-
-    cat.saveCategory(req.body);
-    res.send(`request body: ${req.body.name}`);
-
+    cat.saveCategory(req.body)
+    .then(x => {
+        res.send(x);
+    })
+    .catch(x=> res.status(500).send(x.nessage));
 });
 
 router.put('/:id', (req, res) => {
-    console.log(`request body ${req.body.name}`);
+    cat.updateCategory(req.params.id,req.body);
     res.send(`modify a snipplet with ${req.params.id}`);
 });
 

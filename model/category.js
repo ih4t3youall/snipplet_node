@@ -4,21 +4,21 @@ mongoose.connect('mongodb://localhost/snipplet')
     .then(() => console.log('connected to the database'))
     .catch((err) => console.log(`Error accessing the database ${err.message}`));
 const categorySchema = mongoose.Schema({
-    title: String,
+    title: { type: String, required: true},
     snipplets: [{
-        title: String,
+        title: { type: String,required: true},
         content: String
     }]
 });
 const Category = mongoose.model('Category', categorySchema);
-const cate = mongoose.model('Category', categorySchema);
+//const cate = mongoose.model('Category', categorySchema);
 class CategoryDAO {
 
-    async saveCategory(category) {
+    async saveCategory(categoryDTO) {
         return new Promise((resolve, reject) => {
-            const parsedCategory = this.parseCategory(category);
+            const parsedCategory = this.parseCategory(categoryDTO);
             console.log('parsed category', parsedCategory);
-           cate.find({title:category.title})
+           Category.find({title:categoryDTO.title})
            .then(x=> {
               if(x == '') {
                   parsedCategory.save()
@@ -28,14 +28,7 @@ class CategoryDAO {
                  reject(new Error('el snipplet ya existe'));
               }
             });
-           
-           
-           
-            
-           
-
         });
-
     }
     // async saveCategory(category) {
     //     return new Promise( (resolve,reject){
@@ -67,14 +60,14 @@ class CategoryDAO {
 
     async getCategory(id) {
         return new Promise((resolve, reject) => {
-            cate.findById(id)
+            Category.findById(id)
             .then(x=> resolve(x))
             .catch(x => reject(new Error('error')));
         }) 
     }
 
     async updateCategory(id, categoryDTO) {
-        cate.findById(id)
+        Category.findById(id)
             .then(catego => {
                 catego.title = categoryDTO.title;
                 console.log('loggin the snipplets after merge', catego.snipplets);
@@ -118,8 +111,8 @@ class CategoryDAO {
         return c.filter(function (item, pos) { return c.indexOf(item) == pos });
     }
 
-    deleteCategory(id) {
-        cate.deleteOne(id)
+    async deleteCategory(id) {
+        Category.deleteOne(id)
             .then(x => console.log(`categoryd ${id}, deleted`))
             .catch(x => console.log(`category deleting error ${x.message}`))
     }
@@ -127,7 +120,7 @@ class CategoryDAO {
 
     getAllCategories() {
 
-        cate.find()
+        Category.find()
             .then(x => console.log(x))
             .catch(x => console.log(x));
     }

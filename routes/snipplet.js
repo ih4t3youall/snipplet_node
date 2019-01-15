@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
+//puedo usar lo de traerme la variable
 const Category = require('../model/category');
 const cat = new Category();
 
-router.get('/', (req, res) => {
-
-    console.log("i get here");
-    res.send('return all snipplets');
-
+router.get('/', async (req, res) => {
+    const categories = await cat.getAllCategories();
+    res.send(categories);
 });
 
 router.get('/:id', (req, res) => {
@@ -21,7 +20,10 @@ router.post('/', (req, res) => {
     .then(x => {
         res.send(x);
     })
-    .catch(x=> res.status(500).send(x.nessage));
+    .catch(
+        x=> {
+            res.status(500).send(x.message);
+    });
 });
 
 router.put('/:id', (req, res) => {
@@ -30,6 +32,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
+    cat.deleteCategory(req.body);
     res.send(`delete a snipplet with id: ${req.params.id}`);
 });
 

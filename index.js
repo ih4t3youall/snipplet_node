@@ -2,7 +2,7 @@ const express = require('express');
 const Joi = require('joi');
 const morgan = require('morgan');
 const helmet = require('helmet');
-const facade = require('./test/facade');
+//const facade = require('./test/facade');
 const snipplet = require('./routes/snipplet');
 const Category = require('./model/category');
 const cat = new  Category();
@@ -16,7 +16,6 @@ app.use(bodyParser.json())
 
 app.use(helmet());
 app.use(morgan('tiny'));
-app.use(facade);
 app.use('/api/snipplet',snipplet);
 
 //cat.getAllCategories();

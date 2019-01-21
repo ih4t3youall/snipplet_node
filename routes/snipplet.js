@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 //puedo usar lo de traerme la variable
 const Category = require('../model/category');
 const cat = new Category();
@@ -15,7 +17,7 @@ router.get('/:id', (req, res) => {
     .catch(x=> res.status(500).send(x));
 });
 
-router.post('/', (req, res) => {
+router.post('/',auth, (req, res) => {
     cat.saveCategory(req.body)
     .then(x => {
         res.send(x);
@@ -26,7 +28,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id',[auth,admin], (req, res) => {
     cat.updateCategory(req.params.id,req.body);
     res.send(`modify a snipplet with ${req.params.id}`);
 });
